@@ -23,12 +23,8 @@
 		]
 	},
 	"mixins": [
-		"potato-fps.mixins.json",
-		{
-			"config": "potato-fps.client.mixins.json",
-			"environment": "client"
-		}
-	],
+		"potato-fps.mixins.json"
+	 ],
 	"depends": {
 		"fabricloader": ">=0.18.4",
 		"minecraft": "~1.21.11",
