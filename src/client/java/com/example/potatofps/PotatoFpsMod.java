@@ -57,7 +57,6 @@ public class PotatoFpsMod implements ClientModInitializer {
                 client.options.getViewDistance().setValue(render - 1);
                 client.options.getSimulationDistance().setValue(Math.max(minRender, sim - 1));
                 client.options.getEntityDistanceScaling().setValue(0.5);
-                client.options.particles = 1;
 
                 System.out.println("PotatoFPS lowering render distance → " + (render - 1));
             }
@@ -67,7 +66,6 @@ public class PotatoFpsMod implements ClientModInitializer {
                 client.options.getViewDistance().setValue(render + 1);
                 client.options.getSimulationDistance().setValue(Math.min(maxRender, sim + 1));
                 client.options.getEntityDistanceScaling().setValue(1.0);
-                client.options.particles = 0;
 
                 System.out.println("PotatoFPS increasing render distance → " + (render + 1));
             }
