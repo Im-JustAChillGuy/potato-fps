@@ -3,9 +3,9 @@
 	"id": "potato-fps",
 	"version": "${version}",
 	"name": "Potato FPS",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "This mod is for Potato PCs to increase FPS when FPS decreases!",
 	"authors": [
-		"Me!"
+		"ThePotionsMaster"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
