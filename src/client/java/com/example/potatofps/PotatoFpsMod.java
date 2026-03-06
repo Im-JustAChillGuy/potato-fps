@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.option.ParticlesOption;
+import net.minecraft.client.option.ParticlesMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -58,7 +58,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                 client.options.getViewDistance().setValue(render - 1);
                 client.options.getSimulationDistance().setValue(Math.max(minRender, sim - 1));
                 client.options.getEntityDistanceScaling().setValue(0.5);
-                client.options.getParticles().setValue(ParticlesOption.MINIMAL);
+                client.options.getParticles().setValue(ParticlesMode.MINIMAL);
 
                 System.out.println("PotatoFPS lowering render distance → " + (render - 1));
             }
@@ -68,7 +68,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                 client.options.getViewDistance().setValue(render + 1);
                 client.options.getSimulationDistance().setValue(Math.min(maxRender, sim + 1));
                 client.options.getEntityDistanceScaling().setValue(1.0);
-                client.options.getParticles().setValue(ParticlesOption.ALL);
+                client.options.getParticles().setValue(ParticlesMode.ALL);
 
                 System.out.println("PotatoFPS increasing render distance → " + (render + 1));
             }
