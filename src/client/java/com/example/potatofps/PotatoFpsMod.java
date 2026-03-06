@@ -24,12 +24,7 @@ public class PotatoFpsMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        toggleKey = KeyBindingHelper.registerKeyBinding(
-                new KeyBinding(
-                        "key.potatofps.toggle",
-                        InputUtil.Type.KEYSYM,
-                        GLFW.GLFW_KEY_O,
-                        toggleKey = KeyBindingHelper.registerKeyBinding(
+      toggleKey = KeyBindingHelper.registerKeyBinding(
         new KeyBinding(
                 "key.potatofps.toggle",
                 InputUtil.Type.KEYSYM,
@@ -37,8 +32,6 @@ public class PotatoFpsMod implements ClientModInitializer {
                 KeyBinding.Category.MISC
         )
 );
-                )
-        );
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
