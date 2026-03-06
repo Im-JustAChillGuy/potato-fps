@@ -15,8 +15,8 @@
 	"icon": "assets/potato-fps/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
-			"com.example.potatofps.PotatoFPS"
+		"client": [
+			"com.example.potatofps.PotatoFPSMod"
 		],
 		"client": [
 			"com.example.potatofps.PotatoFPSClient"
