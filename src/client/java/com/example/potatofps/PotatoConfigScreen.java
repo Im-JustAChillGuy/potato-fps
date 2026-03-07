@@ -64,9 +64,9 @@ public class PotatoConfigScreen {
             Text.literal("Minimum Render Distance"),
             PotatoConfig.minRender,
             2,
-            16
+            32
     )
-    .setDefaultValue(4)
+    .setDefaultValue(8)
     .setSaveConsumer(newValue -> PotatoConfig.minRender = newValue)
     .build()
 );
