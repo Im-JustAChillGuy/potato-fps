@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.option.ParticlesMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -46,9 +45,8 @@ public class PotatoFpsMod implements ClientModInitializer {
 
             if (!PotatoConfig.potatoMode || client.player == null) return;
 
-            if (PotatoConfig.reduceParticles) {
-                client.options.getParticles().setValue(ParticlesMode.MINIMAL);
-            }
+          
+            
 
             if (PotatoConfig.disableClouds) {
                 client.options.getCloudRenderMode().setValue(net.minecraft.client.option.CloudRenderMode.OFF);
