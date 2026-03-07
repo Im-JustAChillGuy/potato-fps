@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.CloudRenderMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -12,9 +13,6 @@ import org.lwjgl.glfw.GLFW;
 public class PotatoFpsMod implements ClientModInitializer {
 
     private static final int TARGET_FPS = 70;
-
-    int minRender = PotatoConfig.minRender;
-    int maxRender = PotatoConfig.maxRender;
 
     private KeyBinding toggleKey;
 
@@ -45,11 +43,9 @@ public class PotatoFpsMod implements ClientModInitializer {
 
             if (!PotatoConfig.potatoMode || client.player == null) return;
 
-          
-            
-
+            // Apply config optimisations
             if (PotatoConfig.disableClouds) {
-                client.options.getCloudRenderMode().setValue(net.minecraft.client.option.CloudRenderMode.OFF);
+                client.options.getCloudRenderMode().setValue(CloudRenderMode.OFF);
             }
 
             if (PotatoConfig.disableShadows) {
@@ -61,19 +57,23 @@ public class PotatoFpsMod implements ClientModInitializer {
             int render = client.options.getViewDistance().getValue();
             int sim = client.options.getSimulationDistance().getValue();
 
-            if (fps < TARGET_FPS && render > minRender) {
+            if (fps < TARGET_FPS && render > PotatoConfig.minRender) {
 
                 client.options.getViewDistance().setValue(render - 1);
-                client.options.getSimulationDistance().setValue(Math.max(minRender, sim - 1));
+                client.options.getSimulationDistance().setValue(
+                        Math.max(PotatoConfig.minRender, sim - 1)
+                );
                 client.options.getEntityDistanceScaling().setValue(0.5);
 
                 System.out.println("PotatoFPS lowering render distance → " + (render - 1));
             }
 
-            if (fps > TARGET_FPS + 25 && render < maxRender) {
+            if (fps > TARGET_FPS + 25 && render < PotatoConfig.maxRender) {
 
                 client.options.getViewDistance().setValue(render + 1);
-                client.options.getSimulationDistance().setValue(Math.min(maxRender, sim + 1));
+                client.options.getSimulationDistance().setValue(
+                        Math.min(PotatoConfig.maxRender, sim + 1)
+                );
                 client.options.getEntityDistanceScaling().setValue(1.0);
 
                 System.out.println("PotatoFPS increasing render distance → " + (render + 1));
