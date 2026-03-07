@@ -89,6 +89,17 @@ public class PotatoConfigScreen {
                         .setSaveConsumer(newValue -> PotatoConfig.maxRender = newValue)
                         .build()
         );
+        general.addEntry(
+    entryBuilder.startIntSlider(
+            Text.literal("Target FPS"),
+            PotatoConfig.targetFps,
+            30,
+            240
+    )
+    .setDefaultValue(70)
+    .setSaveConsumer(newValue -> PotatoConfig.targetFps = newValue)
+    .build()
+);
 
         return builder.build();
     }
