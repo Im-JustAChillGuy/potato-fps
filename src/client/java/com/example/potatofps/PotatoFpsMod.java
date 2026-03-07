@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.ParticlesMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
@@ -12,8 +13,6 @@ import org.lwjgl.glfw.GLFW;
 public class PotatoFpsMod implements ClientModInitializer {
 
     private static final int TARGET_FPS = 70;
-
-    private boolean enabled = true;
 
     private int minRender = 4;
     private int maxRender = 16;
@@ -23,29 +22,41 @@ public class PotatoFpsMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-      toggleKey = KeyBindingHelper.registerKeyBinding(
-        new KeyBinding(
-                "key.potatofps.toggle",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_O,
-                KeyBinding.Category.MISC
-        )
-);
+        toggleKey = KeyBindingHelper.registerKeyBinding(
+                new KeyBinding(
+                        "key.potatofps.toggle",
+                        InputUtil.Type.KEYSYM,
+                        GLFW.GLFW_KEY_O,
+                        KeyBinding.Category.MISC
+                )
+        );
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
             while (toggleKey.wasPressed()) {
-                enabled = !enabled;
+                PotatoConfig.potatoMode = !PotatoConfig.potatoMode;
 
                 if (client.player != null) {
                     client.player.sendMessage(
-                            Text.literal("Potato Mode: " + (enabled ? "ON" : "OFF")),
+                            Text.literal("Potato Mode: " + (PotatoConfig.potatoMode ? "ON" : "OFF")),
                             true
                     );
                 }
             }
 
-            if (!enabled || client.player == null) return;
+            if (!PotatoConfig.potatoMode || client.player == null) return;
+
+            if (PotatoConfig.reduceParticles) {
+                client.options.getParticles().setValue(ParticlesMode.MINIMAL);
+            }
+
+            if (PotatoConfig.disableClouds) {
+                client.options.getCloudRenderMode().setValue(net.minecraft.client.option.CloudRenderMode.OFF);
+            }
+
+            if (PotatoConfig.disableShadows) {
+                client.options.getEntityShadows().setValue(false);
+            }
 
             int fps = MinecraftClient.getInstance().getCurrentFps();
 
