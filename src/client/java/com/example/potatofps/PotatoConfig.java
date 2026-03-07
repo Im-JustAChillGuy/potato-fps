@@ -11,5 +11,6 @@ public class PotatoConfig {
     public static boolean disableRainParticles = true;
     public static int minRender = 4;
     public static int maxRender = 16;
+    public static int targetFps = 70;
 
 }
