@@ -13,8 +13,8 @@ public class PotatoFpsMod implements ClientModInitializer {
 
     private static final int TARGET_FPS = 70;
 
-    private int minRender = 4;
-    private int maxRender = 16;
+    int minRender = PotatoConfig.minRender;
+    int maxRender = PotatoConfig.maxRender;
 
     private KeyBinding toggleKey;
 
