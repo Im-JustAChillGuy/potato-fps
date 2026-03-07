@@ -59,6 +59,29 @@ public class PotatoConfigScreen {
                         .setDefaultValue(true)
                         .build()
         );
+        general.addEntry(
+    entryBuilder.startIntSlider(
+            Text.literal("Minimum Render Distance"),
+            PotatoConfig.minRender,
+            2,
+            16
+    )
+    .setDefaultValue(4)
+    .setSaveConsumer(newValue -> PotatoConfig.minRender = newValue)
+    .build()
+);
+
+general.addEntry(
+    entryBuilder.startIntSlider(
+            Text.literal("Maximum Render Distance"),
+            PotatoConfig.maxRender,
+            4,
+            32
+    )
+    .setDefaultValue(16)
+    .setSaveConsumer(newValue -> PotatoConfig.maxRender = newValue)
+    .build()
+);
 
         return builder.build();
     }
