@@ -18,70 +18,77 @@ public class PotatoConfigScreen {
         ConfigCategory general = builder.getOrCreateCategory(Text.literal("Performance"));
 
         general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Enable Potato Mode"), true)
+                entryBuilder.startBooleanToggle(Text.literal("Enable Potato Mode"), PotatoConfig.potatoMode)
                         .setDefaultValue(true)
-                        .build()
-        );
-
-
-        general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Disable Entity Shadows"), true)
-                        .setDefaultValue(true)
+                        .setSaveConsumer(newValue -> PotatoConfig.potatoMode = newValue)
                         .build()
         );
 
         general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Disable Clouds"), true)
+                entryBuilder.startBooleanToggle(Text.literal("Disable Entity Shadows"), PotatoConfig.disableShadows)
                         .setDefaultValue(true)
+                        .setSaveConsumer(newValue -> PotatoConfig.disableShadows = newValue)
                         .build()
         );
 
         general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Disable Vignette"), true)
+                entryBuilder.startBooleanToggle(Text.literal("Disable Clouds"), PotatoConfig.disableClouds)
                         .setDefaultValue(true)
+                        .setSaveConsumer(newValue -> PotatoConfig.disableClouds = newValue)
                         .build()
         );
 
         general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Ultra Particle Reduction"), false)
+                entryBuilder.startBooleanToggle(Text.literal("Disable Vignette"), PotatoConfig.disableVignette)
+                        .setDefaultValue(true)
+                        .setSaveConsumer(newValue -> PotatoConfig.disableVignette = newValue)
+                        .build()
+        );
+
+        general.addEntry(
+                entryBuilder.startBooleanToggle(Text.literal("Ultra Particle Reduction"), PotatoConfig.ultraParticleReduction)
                         .setDefaultValue(false)
+                        .setSaveConsumer(newValue -> PotatoConfig.ultraParticleReduction = newValue)
                         .build()
         );
 
         general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Reduce Entity Render Distance"), true)
+                entryBuilder.startBooleanToggle(Text.literal("Reduce Entity Render Distance"), PotatoConfig.reduceEntityDistance)
                         .setDefaultValue(true)
+                        .setSaveConsumer(newValue -> PotatoConfig.reduceEntityDistance = newValue)
                         .build()
         );
 
         general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Disable Rain Splash Particles"), true)
+                entryBuilder.startBooleanToggle(Text.literal("Disable Rain Splash Particles"), PotatoConfig.disableRainParticles)
                         .setDefaultValue(true)
+                        .setSaveConsumer(newValue -> PotatoConfig.disableRainParticles = newValue)
                         .build()
         );
-        general.addEntry(
-    entryBuilder.startIntSlider(
-            Text.literal("Minimum Render Distance"),
-            PotatoConfig.minRender,
-            2,
-            32
-    )
-    .setDefaultValue(8)
-    .setSaveConsumer(newValue -> PotatoConfig.minRender = newValue)
-    .build()
-);
 
-general.addEntry(
-    entryBuilder.startIntSlider(
-            Text.literal("Maximum Render Distance"),
-            PotatoConfig.maxRender,
-            4,
-            32
-    )
-    .setDefaultValue(16)
-    .setSaveConsumer(newValue -> PotatoConfig.maxRender = newValue)
-    .build()
-);
+        general.addEntry(
+                entryBuilder.startIntSlider(
+                        Text.literal("Minimum Render Distance"),
+                        PotatoConfig.minRender,
+                        2,
+                        32
+                )
+                        .setDefaultValue(8)
+                        .setSaveConsumer(newValue -> PotatoConfig.minRender = newValue)
+                        .build()
+        );
+
+        general.addEntry(
+                entryBuilder.startIntSlider(
+                        Text.literal("Maximum Render Distance"),
+                        PotatoConfig.maxRender,
+                        4,
+                        32
+                )
+                        .setDefaultValue(16)
+                        .setSaveConsumer(newValue -> PotatoConfig.maxRender = newValue)
+                        .build()
+        );
 
         return builder.build();
     }
