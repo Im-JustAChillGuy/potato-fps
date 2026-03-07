@@ -9,5 +9,7 @@ public class PotatoConfig {
     public static boolean ultraParticleReduction = false;
     public static boolean reduceEntityDistance = true;
     public static boolean disableRainParticles = true;
+    public static int minRender = 4;
+    public static int maxRender = 16;
 
 }
