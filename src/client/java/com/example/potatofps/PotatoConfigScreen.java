@@ -23,11 +23,6 @@ public class PotatoConfigScreen {
                         .build()
         );
 
-        general.addEntry(
-                entryBuilder.startBooleanToggle(Text.literal("Reduce Particles"), true)
-                        .setDefaultValue(true)
-                        .build()
-        );
 
         general.addEntry(
                 entryBuilder.startBooleanToggle(Text.literal("Disable Entity Shadows"), true)
