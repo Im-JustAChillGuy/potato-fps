@@ -3,9 +3,9 @@
 	"id": "potato-fps",
 	"version": "${version}",
 	"name": "Potato FPS",
-	"description": "This mod is for Potato PCs to increase FPS when FPS decreases!",
+	"description": "Changes render and simulation distance when FPS drops for MUCH smoother gameplay.",
 	"authors": [
-		"ThePotionsMaster"
+		"JustAChillGuy"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
