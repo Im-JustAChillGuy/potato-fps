@@ -17,6 +17,9 @@
 	"entrypoints": {
   "client": [
     "com.example.potatofps.PotatoFpsMod"
+  ],
+  "modmenu": [
+    "com.example.potatofps.PotatoModMenu"
   ]
 },
 	"mixins": [
