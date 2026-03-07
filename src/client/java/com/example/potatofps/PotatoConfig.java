@@ -3,7 +3,6 @@ package com.example.potatofps;
 public class PotatoConfig {
 
     public static boolean potatoMode = true;
-    public static boolean reduceParticles = true;
     public static boolean disableShadows = true;
     public static boolean disableClouds = true;
     public static boolean disableVignette = true;
