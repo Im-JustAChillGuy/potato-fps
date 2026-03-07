@@ -42,6 +42,9 @@ dependencies {
 
 	// Fabric API (needed for ClientTickEvents, KeyBindingHelper, etc.)
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	//Cloth Config API
+	modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 }
 
 processResources {
