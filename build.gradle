@@ -11,10 +11,9 @@ base {
 }
 
 repositories {
-	repositories 
-    maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://maven.terraformersmc.com/" }
     mavenCentral()
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases" }
 }
 
 loom {
