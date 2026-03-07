@@ -12,7 +12,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class PotatoFpsMod implements ClientModInitializer {
 
-    private static final int TARGET_FPS = 70;
 
     private KeyBinding toggleKey;
 
@@ -57,7 +56,7 @@ public class PotatoFpsMod implements ClientModInitializer {
             int render = client.options.getViewDistance().getValue();
             int sim = client.options.getSimulationDistance().getValue();
 
-            if (fps < TARGET_FPS && render > PotatoConfig.minRender) {
+           if (fps < PotatoConfig.targetFps && render > PotatoConfig.minRender) {
 
                 client.options.getViewDistance().setValue(render - 1);
                 client.options.getSimulationDistance().setValue(
@@ -68,7 +67,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                 System.out.println("PotatoFPS lowering render distance → " + (render - 1));
             }
 
-            if (fps > TARGET_FPS + 25 && render < PotatoConfig.maxRender) {
+           if (fps > PotatoConfig.targetFps + 25 && render < PotatoConfig.maxRender) {
 
                 client.options.getViewDistance().setValue(render + 1);
                 client.options.getSimulationDistance().setValue(
