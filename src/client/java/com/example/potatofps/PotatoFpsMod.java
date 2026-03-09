@@ -88,8 +88,21 @@ public class PotatoFpsMod implements ClientModInitializer {
 
             if (!PotatoConfig.potatoMode || !PotatoConfig.showHud || client.player == null) return;
 
-            int fps = client.getCurrentFps();
-            int render = client.options.getViewDistance().getValue();
+           int fps = MinecraftClient.getInstance().getCurrentFps();
+
+int render = client.options.getViewDistance().getValue();
+
+
+int cooldown;
+
+switch (PotatoConfig.adjustmentSpeed) {
+    case 0 -> cooldown = 120; // Super Slow
+    case 1 -> cooldown = 80;  // Slow
+    case 2 -> cooldown = 50;  // Normal
+    case 3 -> cooldown = 25;  // Fast
+    case 4 -> cooldown = 10;  // Super Fast
+    default -> cooldown = 80;
+}
 
            int color;
 
