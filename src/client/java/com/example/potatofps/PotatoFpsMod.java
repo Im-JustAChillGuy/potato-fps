@@ -9,6 +9,7 @@ import net.minecraft.client.option.CloudRenderMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 public class PotatoFpsMod implements ClientModInitializer {
 
@@ -77,6 +78,25 @@ public class PotatoFpsMod implements ClientModInitializer {
 
                 System.out.println("PotatoFPS increasing render distance → " + (render + 1));
             }
-        });
+        HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
+
+    MinecraftClient client = MinecraftClient.getInstance();
+
+    if (!PotatoConfig.potatoMode || !PotatoConfig.showHud || client.player == null) return;
+
+    int fps = MinecraftClient.getInstance().getCurrentFps();
+    int render = client.options.getViewDistance().getValue();
+
+    String text = "Potato Mode | FPS: " + fps + " | Target: " + PotatoConfig.targetFps + " | Render: " + render;
+
+    drawContext.drawText(
+            client.textRenderer,
+            text,
+            5,
+            5,
+            0xFFFFFF,
+            true
+    );
+});
     }
 }
