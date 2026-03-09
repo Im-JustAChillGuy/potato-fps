@@ -38,7 +38,25 @@ public class PotatoConfigManager {
     public static void save() {
         try {
             FileWriter writer = new FileWriter(CONFIG_FILE);
-            GSON.toJson(new PotatoConfig(), writer);
+            public static void save() {
+    try {
+        FileWriter writer = new FileWriter(CONFIG_FILE);
+
+        JsonObject json = new JsonObject();
+
+        json.addProperty("potatoMode", PotatoConfig.potatoMode);
+        json.addProperty("disableClouds", PotatoConfig.disableClouds);
+        json.addProperty("disableShadows", PotatoConfig.disableShadows);
+        json.addProperty("minRender", PotatoConfig.minRender);
+        json.addProperty("maxRender", PotatoConfig.maxRender);
+        json.addProperty("targetFps", PotatoConfig.targetFps);
+        json.addProperty("adjustmentSpeed", PotatoConfig.adjustmentSpeed);
+        json.addProperty("showHud", PotatoConfig.showHud);
+
+        GSON.toJson(json, writer);
+
+        writer.close();
+
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
