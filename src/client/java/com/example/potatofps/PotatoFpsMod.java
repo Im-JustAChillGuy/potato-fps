@@ -104,13 +104,14 @@ if (fps < PotatoConfig.targetFps - 15) {
 }
 
             drawContext.drawText(
-                    client.textRenderer,
-                    text,
-                    5,
-                    5,
-                    0xFFFFFF,
-                    true
-            );
+        client.textRenderer,
+        text,
+        5,
+        5,
+        color,
+        true
+);
+            
         });
     }
 }
