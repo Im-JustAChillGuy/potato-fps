@@ -107,6 +107,16 @@ public class PotatoConfigScreen {
         .setSaveConsumer(newValue -> PotatoConfig.showHud = newValue)
         .build()
 );
+        general.addEntry(
+    entryBuilder.startEnumSelector(
+            Text.literal("Adjustment Speed"),
+            AdjustmentSpeed.class,
+            AdjustmentSpeed.values()[PotatoConfig.adjustmentSpeed]
+    )
+    .setDefaultValue(AdjustmentSpeed.SLOW)
+    .setSaveConsumer(newValue -> PotatoConfig.adjustmentSpeed = newValue.ordinal())
+    .build()
+);
 
         return builder.build();
     }
