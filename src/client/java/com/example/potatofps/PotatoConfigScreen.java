@@ -100,6 +100,12 @@ public class PotatoConfigScreen {
     .setSaveConsumer(newValue -> PotatoConfig.targetFps = newValue)
     .build()
 );
+        general.addEntry(
+    entryBuilder.startBooleanToggle(Text.literal("Show Potato HUD"), PotatoConfig.showHud)
+        .setDefaultValue(true)
+        .setSaveConsumer(newValue -> PotatoConfig.showHud = newValue)
+        .build()
+);
 
         return builder.build();
     }
