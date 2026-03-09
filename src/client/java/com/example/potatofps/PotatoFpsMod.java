@@ -3,16 +3,15 @@ package com.example.potatofps;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.CloudRenderMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 public class PotatoFpsMod implements ClientModInitializer {
-
 
     private KeyBinding toggleKey;
 
@@ -43,7 +42,6 @@ public class PotatoFpsMod implements ClientModInitializer {
 
             if (!PotatoConfig.potatoMode || client.player == null) return;
 
-            // Apply config optimisations
             if (PotatoConfig.disableClouds) {
                 client.options.getCloudRenderMode().setValue(CloudRenderMode.OFF);
             }
@@ -57,7 +55,7 @@ public class PotatoFpsMod implements ClientModInitializer {
             int render = client.options.getViewDistance().getValue();
             int sim = client.options.getSimulationDistance().getValue();
 
-           if (fps < PotatoConfig.targetFps && render > PotatoConfig.minRender) {
+            if (fps < PotatoConfig.targetFps && render > PotatoConfig.minRender) {
 
                 client.options.getViewDistance().setValue(render - 1);
                 client.options.getSimulationDistance().setValue(
@@ -68,7 +66,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                 System.out.println("PotatoFPS lowering render distance → " + (render - 1));
             }
 
-           if (fps > PotatoConfig.targetFps + 25 && render < PotatoConfig.maxRender) {
+            if (fps > PotatoConfig.targetFps + 25 && render < PotatoConfig.maxRender) {
 
                 client.options.getViewDistance().setValue(render + 1);
                 client.options.getSimulationDistance().setValue(
@@ -78,25 +76,29 @@ public class PotatoFpsMod implements ClientModInitializer {
 
                 System.out.println("PotatoFPS increasing render distance → " + (render + 1));
             }
+
+        });
+
+        // HUD renderer (separate from tick event)
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
 
-    MinecraftClient client = MinecraftClient.getInstance();
+            MinecraftClient client = MinecraftClient.getInstance();
 
-    if (!PotatoConfig.potatoMode || !PotatoConfig.showHud || client.player == null) return;
+            if (!PotatoConfig.potatoMode || !PotatoConfig.showHud || client.player == null) return;
 
-    int fps = MinecraftClient.getInstance().getCurrentFps();
-    int render = client.options.getViewDistance().getValue();
+            int fps = client.getCurrentFps();
+            int render = client.options.getViewDistance().getValue();
 
-    String text = "Potato Mode | FPS: " + fps + " | Target: " + PotatoConfig.targetFps + " | Render: " + render;
+            String text = "Potato Mode | FPS: " + fps + " | Target: " + PotatoConfig.targetFps + " | Render: " + render;
 
-    drawContext.drawText(
-            client.textRenderer,
-            text,
-            5,
-            5,
-            0xFFFFFF,
-            true
-    );
-});
+            drawContext.drawText(
+                    client.textRenderer,
+                    text,
+                    5,
+                    5,
+                    0xFFFFFF,
+                    true
+            );
+        });
     }
 }
