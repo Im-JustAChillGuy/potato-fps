@@ -4,11 +4,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.CloudRenderMode;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+
 import org.lwjgl.glfw.GLFW;
 
 public class PotatoFpsMod implements ClientModInitializer {
@@ -21,6 +23,7 @@ public class PotatoFpsMod implements ClientModInitializer {
 
         PotatoConfigManager.load();
 
+        // Toggle Potato Mode key
         toggleKey = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding(
                         "key.potatofps.toggle",
@@ -30,8 +33,19 @@ public class PotatoFpsMod implements ClientModInitializer {
                 )
         );
 
+        // Toggle HUD key
+        hudToggleKey = KeyBindingHelper.registerKeyBinding(
+                new KeyBinding(
+                        "key.potatofps.togglehud",
+                        InputUtil.Type.KEYSYM,
+                        GLFW.GLFW_KEY_H,
+                        KeyBinding.Category.MISC
+                )
+        );
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
+            // Toggle Potato Mode
             while (toggleKey.wasPressed()) {
                 PotatoConfig.potatoMode = !PotatoConfig.potatoMode;
 
@@ -42,19 +56,22 @@ public class PotatoFpsMod implements ClientModInitializer {
                     );
                 }
             }
-            while (hudToggleKey.wasPressed()) {
-    PotatoConfig.showHud = !PotatoConfig.showHud;
 
-    if (client.player != null) {
-        client.player.sendMessage(
-            Text.literal("Potato HUD: " + (PotatoConfig.showHud ? "ON" : "OFF")),
-            true
-        );
-    }
-}
+            // Toggle HUD
+            while (hudToggleKey.wasPressed()) {
+                PotatoConfig.showHud = !PotatoConfig.showHud;
+
+                if (client.player != null) {
+                    client.player.sendMessage(
+                            Text.literal("Potato HUD: " + (PotatoConfig.showHud ? "ON" : "OFF")),
+                            true
+                    );
+                }
+            }
 
             if (!PotatoConfig.potatoMode || client.player == null) return;
 
+            // Apply optimizations
             if (PotatoConfig.disableClouds) {
                 client.options.getCloudRenderMode().setValue(CloudRenderMode.OFF);
             }
@@ -68,23 +85,29 @@ public class PotatoFpsMod implements ClientModInitializer {
             int render = client.options.getViewDistance().getValue();
             int sim = client.options.getSimulationDistance().getValue();
 
+            // Lower render distance if FPS drops
             if (fps < PotatoConfig.targetFps && render > PotatoConfig.minRender) {
 
                 client.options.getViewDistance().setValue(render - 1);
+
                 client.options.getSimulationDistance().setValue(
                         Math.max(PotatoConfig.minRender, sim - 1)
                 );
+
                 client.options.getEntityDistanceScaling().setValue(0.5);
 
                 System.out.println("PotatoFPS lowering render distance → " + (render - 1));
             }
 
+            // Raise render distance if FPS is good
             if (fps > PotatoConfig.targetFps + 25 && render < PotatoConfig.maxRender) {
 
                 client.options.getViewDistance().setValue(render + 1);
+
                 client.options.getSimulationDistance().setValue(
                         Math.min(PotatoConfig.maxRender, sim + 1)
                 );
+
                 client.options.getEntityDistanceScaling().setValue(1.0);
 
                 System.out.println("PotatoFPS increasing render distance → " + (render + 1));
@@ -92,60 +115,38 @@ public class PotatoFpsMod implements ClientModInitializer {
 
         });
 
-        // HUD renderer (separate from tick event)
+        // HUD Renderer
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
 
             MinecraftClient client = MinecraftClient.getInstance();
 
             if (!PotatoConfig.potatoMode || !PotatoConfig.showHud || client.player == null) return;
 
-           int fps = MinecraftClient.getInstance().getCurrentFps();
+            int fps = client.getCurrentFps();
+            int render = client.options.getViewDistance().getValue();
 
-int render = client.options.getViewDistance().getValue();
+            int color;
 
+            if (fps < PotatoConfig.targetFps - 15) {
+                color = 0xFF5555; // red
+            } else if (fps < PotatoConfig.targetFps) {
+                color = 0xFFFF55; // yellow
+            } else {
+                color = 0x55FF55; // green
+            }
 
-int cooldown;
+            drawContext.drawText(client.textRenderer, "🥔 Potato Mode | FPS: ", 5, 5, 0xFFFFFF, true);
 
-switch (PotatoConfig.adjustmentSpeed) {
-    case 0 -> cooldown = 120; // Super Slow
-    case 1 -> cooldown = 80;  // Slow
-    case 2 -> cooldown = 50;  // Normal
-    case 3 -> cooldown = 25;  // Fast
-    case 4 -> cooldown = 10;  // Super Fast
-    default -> cooldown = 80;
-}
+            drawContext.drawText(client.textRenderer, String.valueOf(fps), 135, 5, color, true);
 
-           int color;
-
-if (fps < PotatoConfig.targetFps - 15) {
-    color = 0xFF5555; // red
-} else if (fps < PotatoConfig.targetFps) {
-    color = 0xFFFF55; // yellow
-} else {
-    color = 0x55FF55; // green
-}
-
-drawContext.drawText(client.textRenderer, "🥔 Potato Mode | FPS: ", 5, 5, 0xFFFFFF, true);
-
-drawContext.drawText(client.textRenderer, String.valueOf(fps), 135, 5, color, true);
-
-drawContext.drawText(
-        client.textRenderer,
-        " | Target: " + PotatoConfig.targetFps + " | Render: " + render,
-        160,
-        5,
-        0xFFFFFF,
-        true
-);
-            hudToggleKey = KeyBindingHelper.registerKeyBinding(
-        new KeyBinding(
-                "key.potatofps.togglehud",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_H,
-                KeyBinding.Category.MISC
-        )
-);
-            
+            drawContext.drawText(
+                    client.textRenderer,
+                    " | Target: " + PotatoConfig.targetFps + " | Render: " + render,
+                    160,
+                    5,
+                    0xFFFFFF,
+                    true
+            );
         });
     }
 }
