@@ -18,6 +18,8 @@ public class PotatoFpsMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
+        PotatoConfigManager.load();
+
         toggleKey = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding(
                         "key.potatofps.toggle",
