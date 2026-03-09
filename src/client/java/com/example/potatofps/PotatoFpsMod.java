@@ -91,9 +91,7 @@ public class PotatoFpsMod implements ClientModInitializer {
             int fps = client.getCurrentFps();
             int render = client.options.getViewDistance().getValue();
 
-            String text = "Potato Mode | FPS: " + fps + " | Target: " + PotatoConfig.targetFps + " | Render: " + render;
-           
-            int color;
+           int color;
 
 if (fps < PotatoConfig.targetFps - 15) {
     color = 0xFF5555; // red
@@ -103,12 +101,16 @@ if (fps < PotatoConfig.targetFps - 15) {
     color = 0x55FF55; // green
 }
 
-            drawContext.drawText(
+drawContext.drawText(client.textRenderer, "🥔 Potato Mode | FPS: ", 5, 5, 0xFFFFFF, true);
+
+drawContext.drawText(client.textRenderer, String.valueOf(fps), 135, 5, color, true);
+
+drawContext.drawText(
         client.textRenderer,
-        text,
+        " | Target: " + PotatoConfig.targetFps + " | Render: " + render,
+        160,
         5,
-        5,
-        color,
+        0xFFFFFF,
         true
 );
             
