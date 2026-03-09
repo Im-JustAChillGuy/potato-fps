@@ -10,10 +10,11 @@ public class PotatoConfigScreen {
 
     public static Screen create(Screen parent) {
 
-        ConfigBuilder builder = ConfigBuilder.create()
-                .setParentScreen(parent)
-                .setTitle(Text.literal("Potato FPS Settings"));
-
+       ConfigBuilder builder = ConfigBuilder.create()
+        .setParentScreen(parent)
+        .setTitle(Text.literal("Potato FPS Settings"))
+        .setSavingRunnable(() -> PotatoConfigManager.save());
+        
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         ConfigCategory general = builder.getOrCreateCategory(Text.literal("Performance"));
 
