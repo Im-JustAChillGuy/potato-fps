@@ -14,6 +14,7 @@ import org.lwjgl.glfw.GLFW;
 public class PotatoFpsMod implements ClientModInitializer {
 
     private KeyBinding toggleKey;
+    private KeyBinding hudToggleKey;
 
     @Override
     public void onInitializeClient() {
@@ -41,6 +42,16 @@ public class PotatoFpsMod implements ClientModInitializer {
                     );
                 }
             }
+            while (hudToggleKey.wasPressed()) {
+    PotatoConfig.showHud = !PotatoConfig.showHud;
+
+    if (client.player != null) {
+        client.player.sendMessage(
+            Text.literal("Potato HUD: " + (PotatoConfig.showHud ? "ON" : "OFF")),
+            true
+        );
+    }
+}
 
             if (!PotatoConfig.potatoMode || client.player == null) return;
 
@@ -125,6 +136,14 @@ drawContext.drawText(
         5,
         0xFFFFFF,
         true
+);
+            hudToggleKey = KeyBindingHelper.registerKeyBinding(
+        new KeyBinding(
+                "key.potatofps.togglehud",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_H,
+                KeyBinding.Category.MISC
+        )
 );
             
         });
