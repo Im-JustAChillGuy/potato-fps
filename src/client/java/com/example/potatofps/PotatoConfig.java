@@ -13,5 +13,6 @@ public class PotatoConfig {
     public static int maxRender = 16;
     public static int targetFps = 70;
     public static boolean showHud = true;
+    public static int adjustmentSpeed = 1;
 
 }
