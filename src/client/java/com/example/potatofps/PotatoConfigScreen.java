@@ -117,6 +117,16 @@ public class PotatoConfigScreen {
     .setSaveConsumer(newValue -> PotatoConfig.adjustmentSpeed = newValue.ordinal())
     .build()
 );
+        builder.startIntSlider(
+        Text.literal("Entity Render Distance"),
+        config.entityRenderDistance,
+        16,
+        128
+)
+.setSaveConsumer(value -> config.entityRenderDistance = value)
+.build(
+    
+);
 
         return builder.build();
     }
