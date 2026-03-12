@@ -119,7 +119,7 @@ public class PotatoConfigScreen {
 );
         builder.startIntSlider(
         Text.literal("Entity Render Distance"),
-        config.entityRenderDistance,
+        PotatoConfig.entityRenderDistance,
         16,
         128
 )
