@@ -10,11 +10,11 @@ public class PotatoConfigScreen {
 
     public static Screen create(Screen parent) {
 
-       ConfigBuilder builder = ConfigBuilder.create()
-        .setParentScreen(parent)
-        .setTitle(Text.literal("Potato FPS Settings"))
-        .setSavingRunnable(() -> PotatoConfigManager.save());
-        
+        ConfigBuilder builder = ConfigBuilder.create()
+                .setParentScreen(parent)
+                .setTitle(Text.literal("Potato FPS Settings"))
+                .setSavingRunnable(() -> PotatoConfigManager.save());
+
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         ConfigCategory general = builder.getOrCreateCategory(Text.literal("Performance"));
 
@@ -90,45 +90,52 @@ public class PotatoConfigScreen {
                         .setSaveConsumer(newValue -> PotatoConfig.maxRender = newValue)
                         .build()
         );
+
         general.addEntry(
-    entryBuilder.startIntSlider(
-            Text.literal("Target FPS"),
-            PotatoConfig.targetFps,
-            30,
-            240
-    )
-    .setDefaultValue(70)
-    .setSaveConsumer(newValue -> PotatoConfig.targetFps = newValue)
-    .build()
-);
+                entryBuilder.startIntSlider(
+                        Text.literal("Target FPS"),
+                        PotatoConfig.targetFps,
+                        30,
+                        240
+                )
+                        .setDefaultValue(70)
+                        .setSaveConsumer(newValue -> PotatoConfig.targetFps = newValue)
+                        .build()
+        );
+
         general.addEntry(
-    entryBuilder.startBooleanToggle(Text.literal("Show Potato HUD"), PotatoConfig.showHud)
-        .setDefaultValue(true)
-        .setSaveConsumer(newValue -> PotatoConfig.showHud = newValue)
-        .build()
-);
+                entryBuilder.startBooleanToggle(Text.literal("Show Potato HUD"), PotatoConfig.showHud)
+                        .setDefaultValue(true)
+                        .setSaveConsumer(newValue -> PotatoConfig.showHud = newValue)
+                        .build()
+        );
+
         general.addEntry(
-    entryBuilder.startEnumSelector(
-            Text.literal("Adjustment Speed"),
-            AdjustmentSpeed.class,
-            AdjustmentSpeed.values()[PotatoConfig.adjustmentSpeed]
-    )
-    .setDefaultValue(AdjustmentSpeed.SLOW)
-    .setSaveConsumer(newValue -> PotatoConfig.adjustmentSpeed = newValue.ordinal())
-    .build()
-);
-        category.addEntry(entryBuilder.startIntSlider(
-        Text.literal("Entity Render Distance"),
-        PotatoConfig.entityRenderDistance,
-        16,
-        128
-)
-.setDefaultValue(64)
-.setSaveConsumer(value -> {
-    PotatoConfig.entityRenderDistance = value;
-    PotatoConfigManager.save();
-})
-.build());
+                entryBuilder.startEnumSelector(
+                        Text.literal("Adjustment Speed"),
+                        AdjustmentSpeed.class,
+                        AdjustmentSpeed.values()[PotatoConfig.adjustmentSpeed]
+                )
+                        .setDefaultValue(AdjustmentSpeed.SLOW)
+                        .setSaveConsumer(newValue -> PotatoConfig.adjustmentSpeed = newValue.ordinal())
+                        .build()
+        );
+
+        // Fixed section (category -> general)
+        general.addEntry(
+                entryBuilder.startIntSlider(
+                        Text.literal("Entity Render Distance"),
+                        PotatoConfig.entityRenderDistance,
+                        16,
+                        128
+                )
+                        .setDefaultValue(64)
+                        .setSaveConsumer(value -> {
+                            PotatoConfig.entityRenderDistance = value;
+                            PotatoConfigManager.save();
+                        })
+                        .build()
+        );
 
         return builder.build();
     }
