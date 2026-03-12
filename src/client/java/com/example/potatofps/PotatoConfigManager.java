@@ -39,6 +39,7 @@ public class PotatoConfigManager {
             PotatoConfig.targetFps = json.get("targetFps").getAsInt();
             PotatoConfig.adjustmentSpeed = json.get("adjustmentSpeed").getAsInt();
             PotatoConfig.showHud = json.get("showHud").getAsBoolean();
+            PotatoConfig.entityRenderDistance = json.get("entityRenderDistance").getAsInt();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,6 +63,7 @@ public class PotatoConfigManager {
             json.addProperty("targetFps", PotatoConfig.targetFps);
             json.addProperty("adjustmentSpeed", PotatoConfig.adjustmentSpeed);
             json.addProperty("showHud", PotatoConfig.showHud);
+            json.addProperty("entityRenderDistance", PotatoConfig.entityRenderDistance);
 
             GSON.toJson(json, writer);
             writer.close();
