@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 
-import com.example.potatofps.PotatoConfigManager;
+import com.example.potatofps.PotatoConfig;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +23,7 @@ public class EntityRenderMixin<T extends Entity> {
 
         double distance = entity.distanceTo(client.player);
 
-        if (distance > PotatoConfigManager.getConfig().entityRenderDistance) {
+        if (distance > PotatoConfig.entityRenderDistance) {
             ci.cancel();
         }
     }
