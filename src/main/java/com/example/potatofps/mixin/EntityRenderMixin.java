@@ -20,7 +20,7 @@ public class EntityRenderMixin<T extends Entity> {
 
         double distance = entity.distanceTo(client.player);
 
-        if (distance > 64) {
+        if (distance > PotatoConfigManager.getConfig().entityRenderDistance) {
             ci.cancel(); // stop rendering the entity
         }
     }
