@@ -29,7 +29,7 @@ public class EntityRenderMixin {
 
         if (client.player == null) return;
 
-        Entity entity = state.entity();
+        Entity entity = state.entity;
 
         double distance = entity.distanceTo(client.player);
 
