@@ -16,5 +16,6 @@ public class PotatoConfig {
     public static int adjustmentSpeed = 1;
     public static int entityRenderDistance = 64;
     public static boolean frustumCulling = true;
+    public static boolean skipInvisible = true;
 
 }
