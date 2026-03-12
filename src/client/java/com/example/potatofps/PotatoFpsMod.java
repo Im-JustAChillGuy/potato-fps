@@ -15,6 +15,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class PotatoFpsMod implements ClientModInitializer {
 
+    public static float particleMultiplier = 1.0f;
+
     private KeyBinding toggleKey;
     private KeyBinding hudToggleKey;
 
@@ -23,55 +25,59 @@ public class PotatoFpsMod implements ClientModInitializer {
 
         PotatoConfigManager.load();
 
-        // Toggle Potato Mode key
+        // Keybinds
         toggleKey = KeyBindingHelper.registerKeyBinding(
-                new KeyBinding(
-                        "key.potatofps.toggle",
+                new KeyBinding("key.potatofps.toggle",
                         InputUtil.Type.KEYSYM,
                         GLFW.GLFW_KEY_O,
-                        KeyBinding.Category.MISC
-                )
+                        KeyBinding.Category.MISC)
         );
 
-        // Toggle HUD key
         hudToggleKey = KeyBindingHelper.registerKeyBinding(
-                new KeyBinding(
-                        "key.potatofps.togglehud",
+                new KeyBinding("key.potatofps.togglehud",
                         InputUtil.Type.KEYSYM,
                         GLFW.GLFW_KEY_H,
-                        KeyBinding.Category.MISC
-                )
+                        KeyBinding.Category.MISC)
         );
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
+            if (client.player == null) return;
+
+            int fps = client.getCurrentFps();
+
+            // Dynamic particle control
+            if (fps < PotatoConfig.targetFps - 20) {
+                particleMultiplier = 0.2f;
+            } else if (fps < PotatoConfig.targetFps) {
+                particleMultiplier = 0.5f;
+            } else {
+                particleMultiplier = 1.0f;
+            }
 
             // Toggle Potato Mode
             while (toggleKey.wasPressed()) {
                 PotatoConfig.potatoMode = !PotatoConfig.potatoMode;
 
-                if (client.player != null) {
-                    client.player.sendMessage(
-                            Text.literal("Potato Mode: " + (PotatoConfig.potatoMode ? "ON" : "OFF")),
-                            true
-                    );
-                }
+                client.player.sendMessage(
+                        Text.literal("Potato Mode: " + (PotatoConfig.potatoMode ? "ON" : "OFF")),
+                        true
+                );
             }
 
             // Toggle HUD
             while (hudToggleKey.wasPressed()) {
                 PotatoConfig.showHud = !PotatoConfig.showHud;
 
-                if (client.player != null) {
-                    client.player.sendMessage(
-                            Text.literal("Potato HUD: " + (PotatoConfig.showHud ? "ON" : "OFF")),
-                            true
-                    );
-                }
+                client.player.sendMessage(
+                        Text.literal("Potato HUD: " + (PotatoConfig.showHud ? "ON" : "OFF")),
+                        true
+                );
             }
 
-            if (!PotatoConfig.potatoMode || client.player == null) return;
+            if (!PotatoConfig.potatoMode) return;
 
-            // Apply optimizations
+            // Apply visual optimisations
             if (PotatoConfig.disableClouds) {
                 client.options.getCloudRenderMode().setValue(CloudRenderMode.OFF);
             }
@@ -79,8 +85,6 @@ public class PotatoFpsMod implements ClientModInitializer {
             if (PotatoConfig.disableShadows) {
                 client.options.getEntityShadows().setValue(false);
             }
-
-            int fps = MinecraftClient.getInstance().getCurrentFps();
 
             int render = client.options.getViewDistance().getValue();
             int sim = client.options.getSimulationDistance().getValue();
@@ -99,7 +103,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                 System.out.println("PotatoFPS lowering render distance → " + (render - 1));
             }
 
-            // Raise render distance if FPS is good
+            // Increase render distance if FPS is good
             if (fps > PotatoConfig.targetFps + 25 && render < PotatoConfig.maxRender) {
 
                 client.options.getViewDistance().setValue(render + 1);
@@ -112,7 +116,6 @@ public class PotatoFpsMod implements ClientModInitializer {
 
                 System.out.println("PotatoFPS increasing render distance → " + (render + 1));
             }
-
         });
 
         // HUD Renderer
@@ -128,15 +131,14 @@ public class PotatoFpsMod implements ClientModInitializer {
             int color;
 
             if (fps < PotatoConfig.targetFps - 15) {
-                color = 0xFF5555; // red
+                color = 0xFF5555;
             } else if (fps < PotatoConfig.targetFps) {
-                color = 0xFFFF55; // yellow
+                color = 0xFFFF55;
             } else {
-                color = 0x55FF55; // green
+                color = 0x55FF55;
             }
 
             drawContext.drawText(client.textRenderer, "🥔 Potato Mode | FPS: ", 5, 5, 0xFFFFFF, true);
-
             drawContext.drawText(client.textRenderer, String.valueOf(fps), 135, 5, color, true);
 
             drawContext.drawText(
