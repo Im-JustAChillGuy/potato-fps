@@ -15,5 +15,6 @@ public class PotatoConfig {
     public static boolean showHud = true;
     public static int adjustmentSpeed = 1;
     public static int entityRenderDistance = 64;
+    public static boolean frustumCulling = true;
 
 }
