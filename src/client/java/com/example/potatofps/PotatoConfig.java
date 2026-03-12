@@ -14,5 +14,6 @@ public class PotatoConfig {
     public static int targetFps = 70;
     public static boolean showHud = true;
     public static int adjustmentSpeed = 1;
+    public int entityRenderDistance = 64;
 
 }
