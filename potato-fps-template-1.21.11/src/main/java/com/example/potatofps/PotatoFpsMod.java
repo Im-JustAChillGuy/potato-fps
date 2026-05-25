@@ -1,85 +1,126 @@
 package com.example.potatofps;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.option.ParticlesMode;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
+
 import org.lwjgl.glfw.GLFW;
 
 public class PotatoFpsMod implements ClientModInitializer {
 
-    private static final int FPS_THRESHOLD = 65;
-    private static boolean enabled = true;
-    private static boolean optimised = false;
+    public static float particleMultiplier = 1.0f;
 
-    private KeyBinding toggleKey;
-
-    private double originalEntityDistance;
-    private int originalMipmaps;
-    private int originalSimDistance;
+    private KeyMapping toggleKey;
+    private KeyMapping hudToggleKey;
 
     @Override
     public void onInitializeClient() {
 
-        toggleKey = KeyBindingHelper.registerKeyBinding(
-                new KeyBinding(
-                        "key.potatofps.toggle",
-                        InputUtil.Type.KEYSYM,
-                        GLFW.GLFW_KEY_O,
-                        "category.potatofps"
-                )
+        PotatoConfigManager.load();
+
+        // Keybinds
+        toggleKey = new KeyMapping(
+                "key.potatofps.toggle",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_O,
+                "key.categories.misc"
         );
+
+        hudToggleKey = new KeyMapping(
+                "key.potatofps.togglehud",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_H,
+                "key.categories.misc"
+        );
+
+        // Register keybinds manually
+        Options options = Minecraft.getInstance().options;
+
+        options.keyMappings =
+                java.util.Arrays.copyOf(
+                        options.keyMappings,
+                        options.keyMappings.length + 2
+                );
+
+        options.keyMappings[options.keyMappings.length - 2] = toggleKey;
+        options.keyMappings[options.keyMappings.length - 1] = hudToggleKey;
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
-            while (toggleKey.wasPressed()) {
-                enabled = !enabled;
-                if (client.player != null) {
-                    client.player.sendMessage(
-                            Text.literal("Potato Mode: " + (enabled ? "ON" : "OFF")),
-                            true
-                    );
-                }
+            if (client.player == null) {
+                return;
             }
 
-            if (!enabled || client.player == null) return;
+            int fps = client.getFps();
 
-            int fps = MinecraftClient.getInstance().getCurrentFps();
-
-            if (fps < FPS_THRESHOLD && !optimised) {
-                enableOptimisation(client);
-                optimised = true;
+            // Dynamic particle control
+            if (fps < PotatoConfig.targetFps - 20) {
+                particleMultiplier = 0.2f;
+            } else if (fps < PotatoConfig.targetFps) {
+                particleMultiplier = 0.5f;
+            } else {
+                particleMultiplier = 1.0f;
             }
 
-            if (fps > FPS_THRESHOLD + 25 && optimised) {
-                disableOptimisation(client);
-                optimised = false;
+            // Toggle Potato Mode
+            while (toggleKey.consumeClick()) {
+
+                PotatoConfig.potatoMode = !PotatoConfig.potatoMode;
+
+                client.player.sendSystemMessage(
+                        Component.literal(
+                                "Potato Mode: "
+                                        + (PotatoConfig.potatoMode ? "ON" : "OFF")
+                        )
+                );
+            }
+
+            // Toggle HUD
+            while (hudToggleKey.consumeClick()) {
+
+                PotatoConfig.showHud = !PotatoConfig.showHud;
+
+                client.player.sendSystemMessage(
+                        Component.literal(
+                                "Potato HUD: "
+                                        + (PotatoConfig.showHud ? "ON" : "OFF")
+                        )
+                );
+            }
+
+            if (!PotatoConfig.potatoMode) {
+                return;
+            }
+
+            int render = client.options.getEffectiveRenderDistance();
+
+            // Lower render distance
+            if (fps < PotatoConfig.targetFps
+                    && render > PotatoConfig.minRender) {
+
+                System.out.println(
+                        "PotatoFPS lowering render distance → "
+                                + (render - 1)
+                );
+            }
+
+            // Increase render distance
+            if (fps > PotatoConfig.targetFps + 25
+                    && render < PotatoConfig.maxRender) {
+
+                System.out.println(
+                        "PotatoFPS increasing render distance → "
+                                + (render + 1)
+                );
             }
         });
-    }
 
-    private void enableOptimisation(MinecraftClient client) {
-
-        originalEntityDistance = client.options.getEntityDistanceScaling().getValue();
-        originalMipmaps = client.options.getMipmapLevels().getValue();
-        originalSimDistance = client.options.getSimulationDistance().getValue();
-
-        client.options.getParticles().setValue(ParticlesMode.MINIMAL);
-        client.options.getEntityDistanceScaling().setValue(0.4);
-        client.options.getMipmapLevels().setValue(0);
-        client.options.getSimulationDistance().setValue(4);
-    }
-
-    private void disableOptimisation(MinecraftClient client) {
-
-        client.options.getEntityDistanceScaling().setValue(originalEntityDistance);
-        client.options.getMipmapLevels().setValue(originalMipmaps);
-        client.options.getSimulationDistance().setValue(originalSimDistance);
-
-        client.options.getParticles().setValue(ParticlesMode.ALL);
+        // HUD temporarily disabled for 26.1 port
     }
 }
