@@ -31,7 +31,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                         "key.potatofps.toggle",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_O,
-                        "category.potatofps"
+                        KeyMapping.CATEGORY_MISC
                 )
         );
 
@@ -40,13 +40,15 @@ public class PotatoFpsMod implements ClientModInitializer {
                         "key.potatofps.togglehud",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_H,
-                        "category.potatofps"
+                        KeyMapping.CATEGORY_MISC
                 )
         );
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
-            if (client.player == null) return;
+            if (client.player == null) {
+                return;
+            }
 
             int fps = client.getFps();
 
@@ -66,8 +68,8 @@ public class PotatoFpsMod implements ClientModInitializer {
 
                 client.player.displayClientMessage(
                         Component.literal(
-                                "Potato Mode: " +
-                                (PotatoConfig.potatoMode ? "ON" : "OFF")
+                                "Potato Mode: "
+                                        + (PotatoConfig.potatoMode ? "ON" : "OFF")
                         ),
                         true
                 );
@@ -80,30 +82,36 @@ public class PotatoFpsMod implements ClientModInitializer {
 
                 client.player.displayClientMessage(
                         Component.literal(
-                                "Potato HUD: " +
-                                (PotatoConfig.showHud ? "ON" : "OFF")
+                                "Potato HUD: "
+                                        + (PotatoConfig.showHud ? "ON" : "OFF")
                         ),
                         true
                 );
             }
 
-            if (!PotatoConfig.potatoMode) return;
+            if (!PotatoConfig.potatoMode) {
+                return;
+            }
 
             int render = client.options.getEffectiveRenderDistance();
 
             // Lower render distance
-            if (fps < PotatoConfig.targetFps && render > PotatoConfig.minRender) {
+            if (fps < PotatoConfig.targetFps
+                    && render > PotatoConfig.minRender) {
 
                 System.out.println(
-                        "PotatoFPS lowering render distance → " + (render - 1)
+                        "PotatoFPS lowering render distance → "
+                                + (render - 1)
                 );
             }
 
             // Increase render distance
-            if (fps > PotatoConfig.targetFps + 25 && render < PotatoConfig.maxRender) {
+            if (fps > PotatoConfig.targetFps + 25
+                    && render < PotatoConfig.maxRender) {
 
                 System.out.println(
-                        "PotatoFPS increasing render distance → " + (render + 1)
+                        "PotatoFPS increasing render distance → "
+                                + (render + 1)
                 );
             }
         });
@@ -133,7 +141,10 @@ public class PotatoFpsMod implements ClientModInitializer {
 
             drawContext.drawString(
                     client.font,
-                    "🥔 Potato Mode | FPS: " + fps,
+                    "🥔 Potato Mode | FPS: "
+                            + fps
+                            + " | Target: "
+                            + PotatoConfig.targetFps,
                     5,
                     5,
                     color
