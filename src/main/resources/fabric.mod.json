@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
 	"id": "potato-fps",
-	"version": "${version}",
+	"version": "1.0.2",
 	"name": "Potato FPS",
-	"description": "Changes render and simulation distance when FPS drops for MUCH smoother gameplay.",
+	"description": "Smart FPS optimisations for low-end PCs",
 	"authors": [
 		"JustAChillGuy"
 	],
