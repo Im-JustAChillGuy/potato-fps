@@ -1,7 +1,7 @@
 // build.gradle
 
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -38,18 +38,18 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
 	// Fabric Loader
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Cloth Config
-	modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-	modRuntimeOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+	compileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+	runtimeOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
 	// ModMenu
-	modCompileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
-	modRuntimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+	runtimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
 }
 
 processResources {
