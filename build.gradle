@@ -34,24 +34,16 @@ loom {
 }
 
 dependencies {
-	// Minecraft
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-	// Fabric Loader
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	compileOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
+	runtimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
 
-	// Cloth Config
-	compileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-	runtimeOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-
-	// ModMenu
 	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
 	runtimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
 }
-
 processResources {
 	inputs.property "version", project.version
 
