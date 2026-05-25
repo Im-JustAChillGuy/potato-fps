@@ -1,3 +1,5 @@
+# .github/workflows/build.yml
+
 name: Build Mod
 
 on:
@@ -17,8 +19,12 @@ jobs:
           distribution: temurin
           java-version: 25
 
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+        shell: bash
+
       - name: Build with Gradle
-        run: .\gradlew.bat build --no-daemon
+        run: .\gradlew.bat clean build --no-daemon
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
