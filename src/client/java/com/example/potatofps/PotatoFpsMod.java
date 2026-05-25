@@ -31,7 +31,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                         "key.potatofps.toggle",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_O,
-                        KeyMapping.CATEGORY_MISC
+                        "key.categories.misc"
                 )
         );
 
@@ -40,7 +40,7 @@ public class PotatoFpsMod implements ClientModInitializer {
                         "key.potatofps.togglehud",
                         InputConstants.Type.KEYSYM,
                         GLFW.GLFW_KEY_H,
-                        KeyMapping.CATEGORY_MISC
+                        "key.categories.misc"
                 )
         );
 
@@ -66,12 +66,11 @@ public class PotatoFpsMod implements ClientModInitializer {
 
                 PotatoConfig.potatoMode = !PotatoConfig.potatoMode;
 
-                client.player.displayClientMessage(
+                client.player.sendSystemMessage(
                         Component.literal(
                                 "Potato Mode: "
                                         + (PotatoConfig.potatoMode ? "ON" : "OFF")
-                        ),
-                        true
+                        )
                 );
             }
 
@@ -80,12 +79,11 @@ public class PotatoFpsMod implements ClientModInitializer {
 
                 PotatoConfig.showHud = !PotatoConfig.showHud;
 
-                client.player.displayClientMessage(
+                client.player.sendSystemMessage(
                         Component.literal(
                                 "Potato HUD: "
                                         + (PotatoConfig.showHud ? "ON" : "OFF")
-                        ),
-                        true
+                        )
                 );
             }
 
@@ -141,7 +139,7 @@ public class PotatoFpsMod implements ClientModInitializer {
 
             drawContext.drawString(
                     client.font,
-                    "🥔 Potato Mode | FPS: "
+                    "Potato Mode | FPS: "
                             + fps
                             + " | Target: "
                             + PotatoConfig.targetFps,
