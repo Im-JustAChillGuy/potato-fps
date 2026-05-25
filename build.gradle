@@ -1,81 +1,152 @@
-// build.gradle
+package com.example.potatofps;
 
-plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
-	id 'maven-publish'
-}
+import com.mojang.blaze3d.platform.InputConstants;
 
-version = project.mod_version
-group = project.maven_group
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
-base {
-	archivesName = project.archives_base_name
-}
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
-repositories {
-	mavenCentral()
+import org.lwjgl.glfw.GLFW;
 
-	// Cloth Config
-	maven { url "https://maven.shedaniel.me/" }
+public class PotatoFpsMod implements ClientModInitializer {
 
-	// Modrinth Maven
-	maven { url "https://api.modrinth.com/maven" }
-}
+    public static float particleMultiplier = 1.0f;
 
-loom {
-	splitEnvironmentSourceSets()
+    private KeyMapping toggleKey;
+    private KeyMapping hudToggleKey;
 
-	mods {
-		"potato-fps" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
-}
+    @Override
+    public void onInitializeClient() {
 
-dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+        PotatoConfigManager.load();
 
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+        // Keybinds
+        toggleKey = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.potatofps.toggle",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_O,
+                        KeyMapping.CATEGORY_MISC
+                )
+        );
 
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+        hudToggleKey = KeyBindingHelper.registerKeyBinding(
+                new KeyMapping(
+                        "key.potatofps.togglehud",
+                        InputConstants.Type.KEYSYM,
+                        GLFW.GLFW_KEY_H,
+                        KeyMapping.CATEGORY_MISC
+                )
+        );
 
-	compileOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
-	runtimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
-	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
-	runtimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
-}
-processResources {
-	inputs.property "version", project.version
+            if (client.player == null) {
+                return;
+            }
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
+            int fps = client.getFps();
 
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
-}
+            // Dynamic particle control
+            if (fps < PotatoConfig.targetFps - 20) {
+                particleMultiplier = 0.2f;
+            } else if (fps < PotatoConfig.targetFps) {
+                particleMultiplier = 0.5f;
+            } else {
+                particleMultiplier = 1.0f;
+            }
 
-java {
-	withSourcesJar()
+            // Toggle Potato Mode
+            while (toggleKey.consumeClick()) {
 
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
-}
+                PotatoConfig.potatoMode = !PotatoConfig.potatoMode;
 
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName}" }
-	}
-}
+                client.player.sendSystemMessage(
+                        Component.literal(
+                                "Potato Mode: "
+                                        + (PotatoConfig.potatoMode ? "ON" : "OFF")
+                        )
+                );
+            }
 
-publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
-			from components.java
-		}
-	}
+            // Toggle HUD
+            while (hudToggleKey.consumeClick()) {
+
+                PotatoConfig.showHud = !PotatoConfig.showHud;
+
+                client.player.sendSystemMessage(
+                        Component.literal(
+                                "Potato HUD: "
+                                        + (PotatoConfig.showHud ? "ON" : "OFF")
+                        )
+                );
+            }
+
+            if (!PotatoConfig.potatoMode) {
+                return;
+            }
+
+            int render = client.options.getEffectiveRenderDistance();
+
+            // Lower render distance
+            if (fps < PotatoConfig.targetFps
+                    && render > PotatoConfig.minRender) {
+
+                System.out.println(
+                        "PotatoFPS lowering render distance → "
+                                + (render - 1)
+                );
+            }
+
+            // Increase render distance
+            if (fps > PotatoConfig.targetFps + 25
+                    && render < PotatoConfig.maxRender) {
+
+                System.out.println(
+                        "PotatoFPS increasing render distance → "
+                                + (render + 1)
+                );
+            }
+        });
+
+        // HUD Renderer
+        HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
+
+            Minecraft client = Minecraft.getInstance();
+
+            if (!PotatoConfig.potatoMode
+                    || !PotatoConfig.showHud
+                    || client.player == null) {
+                return;
+            }
+
+            int fps = client.getFps();
+
+            int color;
+
+            if (fps < PotatoConfig.targetFps - 15) {
+                color = 0xFF5555;
+            } else if (fps < PotatoConfig.targetFps) {
+                color = 0xFFFF55;
+            } else {
+                color = 0x55FF55;
+            }
+
+            drawContext.drawString(
+                    client.font,
+                    "Potato Mode | FPS: "
+                            + fps
+                            + " | Target: "
+                            + PotatoConfig.targetFps,
+                    5,
+                    5,
+                    color
+            );
+        });
+    }
 }
