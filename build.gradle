@@ -1,5 +1,7 @@
+// build.gradle
+
 plugins {
-	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -16,7 +18,7 @@ repositories {
 	// Cloth Config
 	maven { url "https://maven.shedaniel.me/" }
 
-	// Modrinth Maven (reliable for ModMenu)
+	// Modrinth Maven
 	maven { url "https://api.modrinth.com/maven" }
 }
 
@@ -45,7 +47,7 @@ dependencies {
 	modCompileOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 	modRuntimeOnly "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
-	// ModMenu (from Modrinth)
+	// ModMenu
 	modCompileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
 	modRuntimeOnly "maven.modrinth:modmenu:${project.modmenu_version}"
 }
@@ -59,14 +61,14 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
